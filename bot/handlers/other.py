@@ -30,7 +30,11 @@ async def __balance(msg: Message) -> None:
     #print(AccountInfo)
     # Парсим данные в словарь Python
     parsed_data = json.loads(json.dumps(AccountInfo))
-    await bot.send_message(user.id, f"{user.username}, you balance: {parsed_data['balances'][0]['free']} {parsed_data['balances'][0]['asset']}")
+    lines = []
+    for balance in parsed_data['balances']:
+        lines.append(f"{balance['asset']}, доступно: {balance['free']}, заблокировано: {balance['locked']}")
+    text = "\n".join(lines)
+    await bot.send_message(user.id, text)
 async def __buy(msg: Message) -> None:
     bot: Bot = msg.bot
     user = msg.from_user
@@ -56,12 +60,11 @@ async def __buy(msg: Message) -> None:
     print(Price)
     parsed_data = json.loads(json.dumps(Price))
     current_course_of_KAS = float(parsed_data['price']) # курс KAS
-    current_course_of_KAS = 0.179 # курс KAS в момент покупки
+    #current_course_of_KAS = 0.179 # курс KAS в момент покупки
     quan_spent_USDT = 6 #потраченные USDT
     quan_curr_KAS = quan_spent_USDT/current_course_of_KAS
     profit = 0.3
     quan_receive_USDT = quan_spent_USDT + quan_spent_USDT * profit/100
-
 
     await bot.send_message(user.id, f"{user.username}, you Price: {current_course_of_KAS:10.6f} ,quan_curr_KAS: {quan_curr_KAS:5.2f}, quan_spent_USDT {quan_spent_USDT:5.6f} ,quan_receive_USDT: {quan_receive_USDT:5.6f}")
 def register_other_handlers(dp: Dispatcher) -> None:
