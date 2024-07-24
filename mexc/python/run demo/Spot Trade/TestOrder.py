@@ -9,8 +9,8 @@ params = {
     "symbol": "KASUSDT",
     "side": "BUY",
     "type": "LIMIT",
-    "price": "0.176",
-    "quantity": "7"
+    "price": "0.174",
+    "quantity": "8"
 }
 TestOrder = trade.post_order_test(params)
 print(TestOrder)

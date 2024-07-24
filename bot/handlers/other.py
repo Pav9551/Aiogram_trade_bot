@@ -74,3 +74,5 @@ def register_other_handlers(dp: Dispatcher) -> None:
     dp.register_message_handler(__buy, commands=["buy"])
     dp.register_message_handler(other_messages, content_types=['text'], state=None)
 
+
+
