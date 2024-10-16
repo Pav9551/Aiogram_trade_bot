@@ -4,10 +4,13 @@ from aiogram.types import Message
 from python.spot import mexc_spot_v3
 import json
 
-from bot.keyboards import get_admin_keyboard,  get_feedback_keyboard
+from bot.keyboards import get_admin_keyboard,  get_feedback_keyboard, get_mexc_keyboard
 from aiogram.types import CallbackQuery
 from aiogram.dispatcher import FSMContext
 from bot.misc import TgKeys
+
+from mexc_api.mexcClass import mexc_trade
+
 
 
 async def other_messages(msg: Message) -> None:
@@ -23,6 +26,7 @@ async def __start(msg: Message) -> None:
     bot: Bot = msg.bot
     user = msg.from_user
     await bot.send_message(user.id, f"{user.username}: {'Это команда старт'}")
+    await bot.send_message(user.id, 'Ваш ответ ...', reply_markup=get_mexc_keyboard(user.id))
 async def __balance(msg: Message) -> None:
     bot: Bot = msg.bot
     user = msg.from_user
@@ -167,6 +171,24 @@ def register_keyboards_handlers(dp: Dispatcher) -> None:
     dp.register_callback_query_handler(__rate_confusing, lambda c: c.data == "rate_confusing")
     dp.register_callback_query_handler(__rate_very_difficult, lambda c: c.data == "rate_very_difficult")
     dp.register_callback_query_handler(__rate_nonsense, lambda c: c.data == "rate_nonsense")
+async def __mexc_BUY(msg: CallbackQuery, state: FSMContext):
+    bot: Bot = msg.bot
+    user_id = msg.from_user.id
+    await state.finish()
+    query_parameters = {
+            'price': 0.1,
+            'quantity': 10,
+            'side': 'BUY',
+            'symbol': 'KASUSDT',
+            'type': 'LIMIT'
+        }
+    mexc = mexc_trade()
+    mexc.post_order(query_parameters)
+    await bot.send_message(user_id, "Вы: mexc_BUY", reply_markup=get_mexc_keyboard(user_id))
+    await bot.send_message(id_for_answer,"Отправлено сообщение на установку ордера BUYLIMIT")
+def register_keyboards_handlers_mexc(dp: Dispatcher) -> None:
+    dp.register_callback_query_handler(__mexc_BUY, lambda c: c.data == "mexc_BUY")
+
 
 
 

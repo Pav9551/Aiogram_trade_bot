@@ -28,5 +28,11 @@ def get_feedback_keyboard(user_id: int) -> InlineKeyboardMarkup:
         InlineKeyboardButton("Ты втираешь мне какую-то дичь ⛔️", callback_data="rate_nonsense"),
     )
     return kb
+def get_mexc_keyboard(user_id: int) -> InlineKeyboardMarkup:
+    kb = InlineKeyboardMarkup(1)
+    kb.add(
+        InlineKeyboardButton("mexc_BUY ➕", callback_data="mexc_BUY"),
+    )
+    return kb
 
 
