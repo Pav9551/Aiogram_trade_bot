@@ -41,4 +41,27 @@ class mexc_trade(TOOL):
     def post_order(self, params):
         sign = self._signature(params)
         self._request(sign, "/api/v3/order")
+    # 1. Создание нового ListenKey
+    def create_listen_key(self):
+        params = {'recvWindow': 5000}
+        params['timestamp'] = self._get_timestamp()
+        query_string = "&".join([f"{key}={value}" for key, value in params.items()])
+        secret_key = self.secret_key
+        signature = hmac.new(secret_key.encode(), query_string.encode(), hashlib.sha256).hexdigest()
+        params['signature'] = signature
+        print(params)
+        USER_DATA_STREAM_ENDPOINT = "/api/v3/userDataStream"
+        base_uri = self.base_uri
+        headers = {
+            'X-MEXC-APIKEY': self.api_key
+        }
+        response = requests.post(f"{base_uri}{USER_DATA_STREAM_ENDPOINT}", headers=headers,params=params)
+        if response.status_code == 200:
+            listen_key = response.json()['listenKey']
+            print(f"New ListenKey created: {listen_key}")
+            return listen_key
+        else:
+            print(f"Error creating ListenKey: {response.text}")
+            return None
+
 
