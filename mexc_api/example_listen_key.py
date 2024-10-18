@@ -7,5 +7,4 @@ query_parameters = {
             'type': 'LIMIT'
         }
 mexc = mexc_trade()
-mexc.post_order(query_parameters)
 print(mexc.create_listen_key())
