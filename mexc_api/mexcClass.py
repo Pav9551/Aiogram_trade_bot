@@ -42,6 +42,11 @@ class mexc_trade(TOOL):
         sign = self._signature(params)
         self._request(sign, "/api/v3/order")
     # 1. Создание нового ListenKey
+class mexc_trade(TOOL):
+    def post_order(self, params):
+        sign = self._signature(params)
+        self._request(sign, "/api/v3/order")
+    # 1. Создание нового ListenKey
     def create_listen_key(self):
         params = {'recvWindow': 5000}
         params['timestamp'] = self._get_timestamp()
